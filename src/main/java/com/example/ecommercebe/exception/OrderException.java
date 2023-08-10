@@ -1,4 +1,4 @@
-package com.example.exception;
+package com.example.ecommercebe.exception;
 
 public class OrderException extends Exception {
 

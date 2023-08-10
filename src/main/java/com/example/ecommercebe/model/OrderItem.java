@@ -1,6 +1,5 @@
-package com.example.model;
+package com.example.ecommercebe.model;
 
-import com.example.ecommercebe.model.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 

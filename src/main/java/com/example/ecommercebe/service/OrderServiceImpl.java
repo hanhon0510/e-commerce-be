@@ -3,8 +3,8 @@ package com.example.ecommercebe.service;
 import com.example.ecommercebe.model.Address;
 import com.example.ecommercebe.model.User;
 import com.example.ecommercebe.repository.CartRepository;
-import com.example.exception.OrderException;
-import com.example.model.Order;
+import com.example.ecommercebe.exception.OrderException;
+import com.example.ecommercebe.model.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

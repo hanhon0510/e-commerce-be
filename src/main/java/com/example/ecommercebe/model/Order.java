@@ -1,7 +1,5 @@
-package com.example.model;
+package com.example.ecommercebe.model;
 
-import com.example.ecommercebe.model.Address;
-import com.example.ecommercebe.model.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
