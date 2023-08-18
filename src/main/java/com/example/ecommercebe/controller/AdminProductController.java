@@ -68,7 +68,6 @@ public class AdminProductController {
 
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
-
 }
 
 
