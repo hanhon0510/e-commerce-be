@@ -57,17 +57,24 @@ public class AdminProductController {
     }
 
     @PostMapping("/creates")
-    public List<Product> createMultipleProducts(@RequestBody CreateProductRequest[] req) {
-
-        int index = 0;
-        List<Product> products = new ArrayList<>();
-        while (index >= req.length) {
-            Product newProduct = productService.createProduct(req[index]);
-            index++;
-            products.add(newProduct);
+    public ResponseEntity<ApiResponse> createMultipleProducts(@RequestBody CreateProductRequest[] req) {
+        for (CreateProductRequest product : req) {
+            productService.createProduct(product);
         }
-        return products;
 
+        ApiResponse res = new ApiResponse();
+        res.setMessage("All products created successfully");
+        res.setStatus(true);
+
+        return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
 }
+
+
+
+
+
+
+
+
