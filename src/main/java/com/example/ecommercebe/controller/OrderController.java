@@ -51,17 +51,14 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.CREATED);
     }
 
-
-
-
     @GetMapping("/{id}")
-    public ResponseEntity<Order> findOrderById(@PathVariable("id") Long id
-                                               ) throws OrderException, UserException {
+    public ResponseEntity<Order> findOrderById(@PathVariable("id") Long orderId,
+                                               @RequestHeader("Authorization") String jwt) throws OrderException, UserException {
 
-        User user = userService.findUserById(id);
+        User user = userService.findUserProfileByJwt(jwt);
 
-        Order order = orderService.findOrderById(user.getId());
+        Order order = orderService.findOrderById(orderId);
 
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        return new ResponseEntity<>(order, HttpStatus.ACCEPTED);
     }
 }

@@ -37,7 +37,7 @@ public class RatingServiceImpl implements  RatingService{
     }
 
     @Override
-    public List<Rating> getProductsRating(Long productId) {
+    public List<Rating> getProductRatings(Long productId) {
         return ratingRepository.getAllProductsRating(productId);
     }
 }
