@@ -6,7 +6,6 @@ import com.example.ecommercebe.model.Product;
 import com.example.ecommercebe.repository.CategoryRepository;
 import com.example.ecommercebe.repository.ProductRepository;
 import com.example.ecommercebe.request.CreateProductRequest;
-import org.hibernate.sql.results.graph.collection.internal.ListInitializerProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
@@ -29,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductServiceImpl() {}
 
+    @Autowired
     public ProductServiceImpl(ProductRepository productRepository, UserService userService, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.userService = userService;

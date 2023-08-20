@@ -8,7 +8,9 @@ import com.example.ecommercebe.model.User;
 import com.example.ecommercebe.repository.CartItemRepository;
 import com.example.ecommercebe.repository.CartRepository;
 import com.example.ecommercebe.request.AddItemRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CartServiceImpl implements CartService {
 
     private CartRepository cartRepository;
