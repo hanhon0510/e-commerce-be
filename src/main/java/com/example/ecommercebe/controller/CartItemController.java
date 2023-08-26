@@ -29,7 +29,6 @@ public class CartItemController {
         User user = userService.findUserProfileByJwt(jwt);
 
         cartItemService.removeCartItem(user.getId(), cartItemId);
-
         ApiResponse res = new ApiResponse();
         res.setStatus(true);
         res.setMessage("Item deleted from cart");
@@ -42,12 +41,9 @@ public class CartItemController {
                                                       @RequestBody CartItem cartItem,
                                                       @RequestHeader("Authorization") String jwt) throws UserException, CartItemException {
 
-
-
         User user = userService.findUserProfileByJwt(jwt);
 
         CartItem updatedCartItem = cartItemService.updateCartItem(user.getId(), cartItemId, cartItem);
-
         return new ResponseEntity<>(updatedCartItem, HttpStatus.OK);
     }
 }
