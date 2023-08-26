@@ -1,32 +1,93 @@
 package com.example.ecommercebe.service;
 
-import com.example.ecommercebe.model.Address;
-import com.example.ecommercebe.model.User;
-import com.example.ecommercebe.repository.CartRepository;
+import com.example.ecommercebe.model.*;
+import com.example.ecommercebe.repository.*;
 import com.example.ecommercebe.exception.OrderException;
-import com.example.ecommercebe.model.Order;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
-    private CartRepository cartRepository;
+    private CartService cartService;
+    private AddressRepository addressRepository;
+    private UserRepository userRepository;
+    private OrderRepository orderRepository;
+    private OrderItemService orderItemService;
+    private OrderItemRepository orderItemRepository;
 
-    private CartItemService cartItemService;
-
-    private ProductService productService;
-
-    public OrderServiceImpl(CartRepository cartRepository, CartItemService cartItemService, ProductService productService) {
-        this.cartItemService = cartItemService;
-        this.cartRepository = cartRepository;
-        this.productService = productService;
+    public OrderServiceImpl(CartService cartService, AddressRepository addressRepository,
+                            UserRepository userRepository, OrderRepository orderRepository,
+                            OrderItemService orderItemService, OrderItemRepository orderItemRepository) {
+        this.cartService = cartService;
+        this.addressRepository = addressRepository;
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
+        this.orderItemService = orderItemService;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
     public Order createOrder(User user, Address shippingAddress) {
-        return null;
+
+
+        shippingAddress.setUser(user);
+
+        Address address = addressRepository.save(shippingAddress);
+
+        user.getAddress().add(address);
+
+        userRepository.save(user);
+
+        Cart cart = cartService.findUserCart(user.getId());
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (CartItem item : cart.getCartItems()) {
+            OrderItem orderItem = new OrderItem();
+
+
+            orderItem.setPrice(item.getPrice());
+            orderItem.setProduct(item.getProduct());
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setSize(item.getSize());
+            orderItem.setUserId(item.getUserId());
+            orderItem.setDiscountedPrice(item.getDiscountedPrice());
+
+            OrderItem createdOrderItem = orderItemRepository.save(orderItem);
+
+
+            orderItems.add(createdOrderItem);
+
+
+        }
+
+
+        Order createdOrder = new Order();
+        createdOrder.setUser(user);
+        createdOrder.setOrderItems(orderItems);
+        createdOrder.setTotalPrice(cart.getTotalPrice());
+        createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountPrice());
+        createdOrder.setDiscount(cart.getDiscount());
+        createdOrder.setTotalItem(cart.getTotalItem());
+        createdOrder.setShippingAddress(address);
+        createdOrder.setOrderDate(LocalDateTime.now());
+        createdOrder.setOrderStatus("PENDING");
+        createdOrder.getPaymentDetails().setStatus("PENDING");
+        createdOrder.setCreatedAt(LocalDateTime.now());
+
+        Order savedOrder = orderRepository.save(createdOrder);
+
+        for (OrderItem item : orderItems) {
+            item.setOrder(savedOrder);
+            orderItemRepository.save(item);
+        }
+
+
+
+        return savedOrder;
     }
 
     @Override
