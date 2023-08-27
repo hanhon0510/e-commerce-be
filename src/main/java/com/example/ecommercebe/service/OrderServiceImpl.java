@@ -1,13 +1,12 @@
 package com.example.ecommercebe.service;
-
 import com.example.ecommercebe.model.*;
 import com.example.ecommercebe.repository.*;
 import com.example.ecommercebe.exception.OrderException;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -48,7 +47,6 @@ public class OrderServiceImpl implements OrderService {
         for (CartItem item : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
 
-
             orderItem.setPrice(item.getPrice());
             orderItem.setProduct(item.getProduct());
             orderItem.setQuantity(item.getQuantity());
@@ -57,13 +55,8 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setDiscountedPrice(item.getDiscountedPrice());
 
             OrderItem createdOrderItem = orderItemRepository.save(orderItem);
-
-
             orderItems.add(createdOrderItem);
-
-
         }
-
 
         Order createdOrder = new Order();
         createdOrder.setUser(user);
@@ -85,53 +78,102 @@ public class OrderServiceImpl implements OrderService {
             orderItemRepository.save(item);
         }
 
-
-
         return savedOrder;
     }
 
     @Override
     public Order findOrderById(Long orderId) throws OrderException {
-        return null;
+
+        Optional<Order> opt = orderRepository.findById(orderId);
+
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+
+        throw new OrderException("Cannot find order with id: " + orderId);
     }
 
+    // get all orders which have been placed, confirmed, shipped and delivered
     @Override
     public List<Order> usersOrderHistory(Long userId) {
-        return null;
+
+        List<Order> orders = orderRepository.getUsersOrders(userId);
+
+
+        return orders;
     }
 
     @Override
     public Order placedOrder(Long orderId) throws OrderException {
-        return null;
+
+        Order order = findOrderById(orderId);
+        order.setOrderStatus("PLACED");
+        order.getPaymentDetails().setStatus("COMPLETED");
+
+
+        return order;
     }
 
     @Override
     public Order confirmedOrder(Long orderId) throws OrderException {
-        return null;
+
+
+        Order order = findOrderById(orderId);
+        order.setOrderStatus("CONFIRMED");
+
+        Order savedOrder = orderRepository.save(order);
+
+        return savedOrder;
     }
 
     @Override
     public Order shippedOrder(Long orderId) throws OrderException {
-        return null;
+
+        Order order = findOrderById(orderId);
+        order.setOrderStatus("SHIPPED");
+
+        Order savedOrder = orderRepository.save(order);
+
+        return savedOrder;
     }
 
     @Override
     public Order deliveredOrder(Long orderId) throws OrderException {
-        return null;
+
+
+        Order order = findOrderById(orderId);
+        order.setOrderStatus("DELIVERED");
+
+        Order savedOrder = orderRepository.save(order);
+
+        return savedOrder;
     }
 
     @Override
     public Order canceledOrder(Long orderId) throws OrderException {
-        return null;
+
+
+        Order order = findOrderById(orderId);
+        order.setOrderStatus("CANCELLED");
+
+        Order savedOrder = orderRepository.save(order);
+
+        return savedOrder;
     }
 
     @Override
     public List<Order> getAllOrders() {
-        return null;
+
+
+        return orderRepository.findAll();
     }
 
     @Override
-    public Order deletedOrder(Long orderId) throws OrderException {
-        return null;
+    public void deletedOrder(Long orderId) throws OrderException {
+
+        Order order = findOrderById(orderId);
+
+//        orderRepository.delete(order);
+        orderRepository.deleteById(orderId);
     }
 }
