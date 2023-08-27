@@ -26,7 +26,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-
     @PostMapping("/")
     public ResponseEntity<Order> createOrder(@RequestBody Address shippingAddress,
                                              @RequestHeader("Authorization") String jwt) throws UserException {
@@ -38,7 +37,6 @@ public class OrderController {
 
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
-
 
     @GetMapping("/user")
     public ResponseEntity<List<Order>> usersOrderHistory(@RequestHeader("Authorization") String jwt) throws UserException {

@@ -30,6 +30,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order findOrderById(Long orderId) throws OrderException {
+
+        Optional<Order> opt = orderRepository.findById(orderId);
+
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+
+        throw new OrderException("Cannot find order with id: " + orderId);
+    }
+
+    @Override
     public Order createOrder(User user, Address shippingAddress) {
 
 
@@ -81,26 +93,11 @@ public class OrderServiceImpl implements OrderService {
         return savedOrder;
     }
 
-    @Override
-    public Order findOrderById(Long orderId) throws OrderException {
-
-        Optional<Order> opt = orderRepository.findById(orderId);
-
-        if (opt.isPresent()) {
-            return opt.get();
-        }
-
-        throw new OrderException("Cannot find order with id: " + orderId);
-    }
-
     // get all orders which have been placed, confirmed, shipped and delivered
     @Override
     public List<Order> usersOrderHistory(Long userId) {
 
-        List<Order> orders = orderRepository.getUsersOrders(userId);
-
-
-        return orders;
+        return orderRepository.getUsersOrders(userId);
     }
 
     @Override
@@ -109,7 +106,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrderById(orderId);
         order.setOrderStatus("PLACED");
         order.getPaymentDetails().setStatus("COMPLETED");
-
 
         return order;
     }
@@ -121,9 +117,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrderById(orderId);
         order.setOrderStatus("CONFIRMED");
 
-        Order savedOrder = orderRepository.save(order);
-
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override
@@ -132,9 +126,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrderById(orderId);
         order.setOrderStatus("SHIPPED");
 
-        Order savedOrder = orderRepository.save(order);
-
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override
@@ -144,9 +136,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrderById(orderId);
         order.setOrderStatus("DELIVERED");
 
-        Order savedOrder = orderRepository.save(order);
-
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override
@@ -156,15 +146,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrderById(orderId);
         order.setOrderStatus("CANCELLED");
 
-        Order savedOrder = orderRepository.save(order);
-
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override
     public List<Order> getAllOrders() {
-
-
         return orderRepository.findAll();
     }
 
@@ -172,7 +158,6 @@ public class OrderServiceImpl implements OrderService {
     public void deletedOrder(Long orderId) throws OrderException {
 
         Order order = findOrderById(orderId);
-
 //        orderRepository.delete(order);
         orderRepository.deleteById(orderId);
     }

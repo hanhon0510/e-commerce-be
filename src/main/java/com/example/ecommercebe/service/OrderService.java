@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface OrderService {
 
-    public Order createOrder(User user, Address shippingAddress);
-
     public Order findOrderById(Long orderId) throws OrderException;
+
+    public Order createOrder(User user, Address shippingAddress);
 
     public List<Order> usersOrderHistory(Long userId);
 
